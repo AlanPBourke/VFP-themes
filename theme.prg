@@ -22,7 +22,7 @@ endproc
 
 procedure seeAllThemes 
 	with createobject("Theme")
-		dimension aOptions[10]
+		dimension aOptions[15]
 		
 		aOptions[1] = "Dracula"
 		aOptions[2] = "Light (Visual Studio)"
