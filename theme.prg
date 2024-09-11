@@ -4,8 +4,7 @@ set path to home() + "FFC\" additive
 
 set procedure to color.prg additive
 set procedure to json.prg additive
-
-setTheme("Dark (Visual Studio)")
+setTheme("Gruvbox Light Hard")
 *setTheme("Github")
 *seeAllThemes()
 return 
@@ -23,7 +22,7 @@ endproc
 
 procedure seeAllThemes 
 	with createobject("Theme")
-		dimension aOptions[9]
+		dimension aOptions[10]
 		
 		aOptions[1] = "Dracula"
 		aOptions[2] = "Light (Visual Studio)"
@@ -34,6 +33,12 @@ procedure seeAllThemes
 		aOptions[7] = "MacOS Classic"
 		aOptions[8] = "MacOS Modern Dark"	
 		aOptions[9] = "One Monokai"
+		aOptions[10] = "Gruvbox Light Medium"
+		aOptions[11] = "Gruvbox Light Hard"
+		aOptions[12] = "Powershell"
+		aOptions[13] = "Snazzy Light"
+		aOptions[14] = "Ayu Dark"
+		aOptions[15] = "Absent (Rainglow)"
 		
 		for nVar = 1 to alen(aOptions) 
 			.execute(aOptions[nvar])
@@ -113,24 +118,30 @@ define class Theme as Custom
 			else
 				if vartype(uScope) = "O" and pemstatus(uScope, "Array", 5)
 					oSettings = oToken.get("settings")
-					for each scope in uScope.array	
-						for i=1 to getwordcount(scope, ",")
-							this.getColors(alltrim(getwordnum(scope, i, ",")), oSettings, @cForeGround, @cEntry, @cStyle, @cEntryStyle)		
-							
-							if !empty(cForeGround)
-								if cColorToRegister = "error"
-									return .F.
-								endif 							
+
+					* -- AB 2024-09-11 Fix to work with current (2024) VS Code theme format.
+					If Left(uscope.array[1], 11) != "source.json"
+
+						for each scope in uScope.array	
+							for i=1 to getwordcount(scope, ",")
+								this.getColors(alltrim(getwordnum(scope, i, ",")), oSettings, @cForeGround, @cEntry, @cStyle, @cEntryStyle)		
 								
-								cColorToRegister = this.oColor.Hex2Rgb2Register(cForeGround, cEditorBackGround)
-								this.addInArray(cEntry, cColorToRegister)
-							endif 
-							
-							if !empty(cStyle)								
-								this.addInArray(cEntryStyle, cStyle)
-							endif 						
-						next 	
-					next
+								if !empty(cForeGround)
+									if cColorToRegister = "error"
+										return .F.
+									endif 							
+									
+									cColorToRegister = this.oColor.Hex2Rgb2Register(cForeGround, cEditorBackGround)
+									this.addInArray(cEntry, cColorToRegister)
+								endif 
+								
+								if !empty(cStyle)								
+									this.addInArray(cEntryStyle, cStyle)
+								endif 						
+							next 	
+						next
+					 
+					 EndIf
 					 	
 				endif 
 			endif
